@@ -166,4 +166,5 @@
 .\build\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_error.h
 .\build\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\algorithm
 .\build\main.o: .\lib\motordriver.h
+.\build\main.o: .\lib\DHT22.h
 .\build\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\vector.CC
