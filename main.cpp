@@ -12,6 +12,10 @@
 Motor mt(D11,PC_8); // Motor
 PwmOut sound(PC_9); //Buzzer
 DHT22 sensor (PB_2); //Temp & Humid
+//Joystick
+AnalogIn x_axis (PC_2);
+AnalogIn y_axis (PC_3);
+
 //Button
 DigitalIn left_button(PA_14); //left button
 DigitalIn center_button(PB_7); // center button
@@ -37,6 +41,9 @@ void WIND_OFF();
 void timeout_SYSTEM_OFF();
 void BUZZWER_WARNING();
 void check_temp_and_humid();
+void joystick_handler();
+void WARNING_MAX();
+void WARNING_MIN();
 
 class I2CPreInit : public I2C{
    public:
@@ -55,8 +62,11 @@ DigitalOut trig_pin(D10);
 DigitalIn echo_pin(D7);
 HCSR04 hcsr(D10, D7); 
 
-Ticker display_ticker;
+//Ticker display_ticker;
+int ticker_count=0;
 Timeout myTimeout;
+Ticker display_ticker;
+int x, y, debug_print;
 
 bool ultrasonic_timeout_flag = false;
 bool sys_on=false;
@@ -73,52 +83,82 @@ int main(){
    {
 		 	if(!right_button){
 				SYSTEM_ON();
-				
 			}
       while(sys_on){
         ultrasonic();
-				
-         // click SW2 : left button = cooler / heater
-         if(!left_button){
-            if(mode==COOLER){
-							mode=HEAT;
-							left_led=0;
-							Red=1;
-							Blue=0;
-							Green=0;
-            }
-            else{
-							mode=COOLER;
-							left_led=1;
-							Red=0;
-							Blue=1;
-							Green=0;
-            }
-						wait(0.01);
-						WIND_ON(wind_power);
-         }
-			//click SW9 : center button = auto / manual
-				if(!center_button){
-            if(automatic)
-            {
-               automatic=false;
-               center_led=0;
-            }
-            else{
-               automatic=true;
-               center_led=1;
-            }
+				while(1){
+					x = x_axis.read() * 1000;
+					y = y_axis.read() * 1000;
+					//debug_print = 1;
+					if(x<100){ // left side
+						pc.printf("X=%d, Y=%d \r\n", x, y);
+						desired_temp = float(float(y+1)/15 + 16); // 16.06 to 32.20
+						pc.printf("desired temp = %0.2f\r\n", desired_temp);
+						//display();
+						wait(0.1);
+						break;
+					}
+					else if(x>140){ // right side
+						pc.printf("X=%d, Y=%d \r\n", x, y);
+						wind_power = int((y+1)/50)+1; // 1 to 5
+						if(wind_power>=5){
+							WARNING_MAX();
+							wind_power=5;
+						}
+						if(wind_power<=0){
+							WARNING_MIN();
+							wind_power=2;
+						}
+						pc.printf("wind power = %d\r\n", wind_power);
+						//display();
+						wait(0.1);
+						break;
+					}
+					if(x>115&&x<125&&y<125&&y>115){
+						break;
+					}					
 				}
+			 // click SW2 : left button = cooler / heater
+			 if(!left_button){
+					if(mode==COOLER){
+						mode=HEAT;
+						left_led=0;
+						Red=1;
+						Blue=0;
+						Green=0;
+					}
+					else{
+						mode=COOLER;
+						left_led=1;
+						Red=0;
+						Blue=1;
+						Green=0;
+					}
+					wait(0.01);
+					WIND_ON(wind_power);
+			 }
+		//click SW9 : center button = auto / manual
+			if(!center_button){
+					if(automatic)
+					{
+						 automatic=false;
+						 center_led=0;
+					}
+					else{
+						 automatic=true;
+						 center_led=1;
+					}
+			}
 
-			//click SW 10 : right button = power on/off
-				if(!right_button){
-            if(sys_on){
-               SYSTEM_OFF();
-								break;
-            }
-				}
-				wait(0.1);
-      }
+		//click SW 10 : right button = power on/off
+			if(!right_button){
+					if(sys_on){
+						 SYSTEM_OFF();
+							break;
+					}
+			}
+			wait(0.1);
+		}
 		wait(0.1);
   }
 }
@@ -130,7 +170,6 @@ void config(){
 	echo_pin.mode(PullDown); //ultrasonic
 	display_ticker.attach(&display,1.0);	
 	pc.printf("HAVC SYSTEM\r\n");		
-	check_temp_and_humid();
 }
 
 void timeout_SYSTEM_OFF(){
@@ -139,9 +178,38 @@ void timeout_SYSTEM_OFF(){
 		ultrasonic_timeout_flag = false;
 }
 
+void joystick_handler(){
+	x = x_axis.read() * 1000;
+	y = y_axis.read() * 1000;
+	//debug_print = 1;
+	if(x<100){ // left side
+		 pc.printf("X=%d, Y=%d \r\n", x, y);
+		 desired_temp = float(float(y+1)/15 + 16); // 16.06 to 32.20
+		 pc.printf("desired temp = %0.2f\r\n", desired_temp);
+		 //display();
+		 wait(0.1);
+	}
+	else if(x>140){ // right side
+		 pc.printf("X=%d, Y=%d \r\n", x, y);
+		 wind_power = int((y+1)/50)+1; // 1 to 5
+		 if(wind_power>=5){
+			 WARNING_MAX();
+			 wind_power=5;
+		 }
+		 if(wind_power<=0){
+			 WARNING_MIN();
+			 wind_power=2;
+		 }
+		 
+		 pc.printf("wind power = %d\r\n", wind_power);
+		 //display();
+		 wait(0.1);
+	}
+}
+
+
 void ultrasonic(){
    // pc.printf("ultrasonic() started...\r\n");
-   
    hcsr.start();
    wait_ms(500);
    int distance = hcsr.get_dist_cm();
@@ -166,46 +234,43 @@ void ultrasonic(){
       ultrasonic_timeout_flag = false;
       //pc.printf("timeout detach\r\n");
    }
-   wait(0.5);
+   wait(0.1);
 }
 
 void display(){
-   myGUI.clearDisplay();
-   myGUI.setTextCursor(0,0);
-	wait(0.1);
+	check_temp_and_humid();
+	myGUI.clearDisplay();
+	myGUI.setTextCursor(0,0);
    //system on/off
+	if(sys_on){
+		myGUI.printf ("HVAC power is on\r\n");
+	 //conditioner mode COOLER/HEATER
+		if(mode == COOLER){
+			myGUI.printf ("MODE : Cooler\r\n");
+		}
+		else{
+			myGUI.printf ("MODE : Heater\r\n");
+		}      
 
-   if(sys_on){
-      myGUI.printf ("HVAC power is on\r\n");
-		 //conditioner mode COOLER/HEATER
-			if(mode == COOLER){
-				myGUI.printf ("MODE : Cooler\r\n");
-			}
-			else{
-				myGUI.printf ("MODE : Heater\r\n");
-			}      
+		//Temperature Cur/Desired
+		myGUI.printf ("Current Temp : %.1f\r\nDesired Temp : %.1f\r\n", current_temp, desired_temp);
+		//Humid
+		myGUI.printf("Current Humid : %.lf\r\n", humid);
+		//Wind power
+		myGUI.printf("Wind : ");
+		for(int i=0;i<wind_power;i++){
+			myGUI.printf (">");
+		}
+		// Air vent
+		myGUI.printf ("\r\n");
 
-			//Temperature Cur/Desired
-			myGUI.printf ("Current Temp : %.1f\r\nDesired Temp : %.1f\r\n", current_temp, desired_temp);
-			//Humid
-			myGUI.printf("Current Humid : %.lf\r\n", humid);
-			//Wind power
-			myGUI.printf("Wind : ");
-			for(int i=0;i<wind_power;i++){
-				myGUI.printf (">");
-			}
+	}
+	else{
+		myGUI.printf ("HVAC power is off\r\n");
+	}
 
-			// Air vent
-			myGUI.printf ("\r\n");
-   
-   }
-   else{
-      myGUI.printf ("HVAC power is off\r\n");
-   }
-   
-   wait(0.1);
    //myGUI.printf ("%ux%u OLED Display\r\n",myGUI.width(), myGUI.height());
-   myGUI.display();
+	myGUI.display();
 }
 
 void SYSTEM_OFF(){
@@ -245,20 +310,21 @@ void WIND_OFF(){
 	mt.stop();
 }
 
-void BUZZWER_WARNING(){
+void WARNING_MAX(){
 	float max=MAX_RANGE;
-	float min=MIN_RANGE;
-	wait(0.5);
+	
 	sound.period(max);
 	sound=0.5;
-	wait(3);
-	sound.period(1.0);
+	wait(0.5);
+	sound.period(1);
 	sound=0.5;
-	wait(2);
+}
+void WARNING_MIN(){
+	float min=MIN_RANGE;
 	sound.period(min);
 	sound=0.5;
-	wait(3);
-	sound.period(1.0);
+	wait(0.5);
+	sound.period(1);
 	sound=0.5;
 }
 
@@ -269,5 +335,5 @@ void check_temp_and_humid(){
 		h=sensor.getHumidity()/10;
 		current_temp=c;
 		humid=h;
-		pc.printf("check temp and humid : %.1f %.1f",current_temp,humid);
+		//pc.printf("check temp and humid : %.1f %.1f\r\n",current_temp,humid);
 }

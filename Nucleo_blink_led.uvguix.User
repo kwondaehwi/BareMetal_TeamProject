@@ -1855,11 +1855,11 @@
       <ActiveTab>0</ActiveTab>
       <Doc>
         <Name>main.cpp</Name>
-        <ColumnNumber>38</ColumnNumber>
-        <TopLine>109</TopLine>
-        <CurrentLine>130</CurrentLine>
+        <ColumnNumber>30</ColumnNumber>
+        <TopLine>87</TopLine>
+        <CurrentLine>104</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders></ContractedFolders>
+        <ContractedFolders>210</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
     </MDIGroup>
