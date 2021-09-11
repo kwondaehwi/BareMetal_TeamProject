@@ -107,9 +107,9 @@ int main(){
 						break;
 					}
 					else if(x>700&&y<5){
-						//temp down
+						//wind power up
 						if(wind_power==5){
-						
+							WARNING_MAX();
 						}else{
 							wind_power+=1;
 						}
@@ -119,7 +119,8 @@ int main(){
 						
 					}
 					else if(x<5&&y>700){
-						//wind power up
+						
+						//temp down
 						if(desired_temp<=16.06){
 							WARNING_MIN();
 						}else{
@@ -226,6 +227,7 @@ int main(){
 			}
 			wait(0.1);
 		}
+		WIND_OFF();
 		wait(0.1);
   }
 }
@@ -344,13 +346,13 @@ void SYSTEM_OFF(){
 	sys_on = false;
 	sound.period(1.0);
 	sound=0.5;
+	WIND_OFF();
 	right_led=0;
 	center_led=0;
 	left_led=0;
 	Red=0;
 	Blue=0;
 	Green=1;
-	WIND_OFF();
 }
 
 void SYSTEM_ON(){
