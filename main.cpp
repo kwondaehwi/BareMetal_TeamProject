@@ -75,6 +75,7 @@ float current_temp, desired_temp=18.0; //default = 18.0;
 float humid;
 int wind_power=2; // 1~5
 bool automatic=true;
+bool vent;
 
 int main(){
    config();
@@ -168,10 +169,12 @@ int main(){
 					if(automatic)
 					{
 						 automatic=false;
+						 vent = false;
 						 center_led=0;
 					}
 					else{
 						 automatic=true;
+						 vent = true;
 						 center_led=1;
 					}
 			}
@@ -330,7 +333,15 @@ void display(){
 		for(int i=0;i<wind_power;i++){
 			myGUI.printf (">");
 		}
+		myGUI.printf ("\r\n");
 		// Air vent
+		if(vent){
+			myGUI.printf ("vent open\r\n");
+
+		}else{
+			myGUI.printf ("vent closed\r\n");
+
+		}
 		myGUI.printf ("\r\n");
 
 	}
@@ -356,6 +367,7 @@ void SYSTEM_OFF(){
 }
 
 void SYSTEM_ON(){
+	vent = true;
 	sys_on = true;
 	mode=COOLER;
 	automatic=true;
