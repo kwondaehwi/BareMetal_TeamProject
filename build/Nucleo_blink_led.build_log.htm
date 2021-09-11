@@ -30,26 +30,19 @@ Project File Date:  09/09/2021
   
 Rebuild target 'mbed NUCLEO_F401RE'
 compiling Adafruit_GFX.cpp...
-compiling Adafruit_SSD1306.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-lib\Adafruit_SSD1306.cpp: 1 warning, 0 errors
+lib\Adafruit_GFX.cpp: 1 warning, 0 errors
 compiling main.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
 .\lib\hcsr04.h(71): warning:  #1-D: last line of file ends without a newline
   #endif
-main.cpp(226): warning:  #1-D: last line of file ends without a newline
-  }
-main.cpp: 3 warnings, 0 errors
-compiling hcsr04.cpp...
+main.cpp: 2 warnings, 0 errors
+compiling Adafruit_SSD1306.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-lib\hcsr04.h(71): warning:  #1-D: last line of file ends without a newline
-  #endif
-lib\hcsr04.cpp(98): warning:  #1-D: last line of file ends without a newline
-  */
-lib\hcsr04.cpp: 3 warnings, 0 errors
+lib\Adafruit_SSD1306.cpp: 1 warning, 0 errors
 compiling motordriver.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
@@ -58,8 +51,16 @@ compiling DHT22.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
 lib\DHT22.cpp: 1 warning, 0 errors
+compiling hcsr04.cpp...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+lib\hcsr04.h(71): warning:  #1-D: last line of file ends without a newline
+  #endif
+lib\hcsr04.cpp(98): warning:  #1-D: last line of file ends without a newline
+  */
+lib\hcsr04.cpp: 3 warnings, 0 errors
 linking...
-Program Size: Code=34448 RO-data=5212 RW-data=1540 ZI-data=3040  
+Program Size: Code=34940 RO-data=5212 RW-data=1540 ZI-data=3184  
 After Build - User command #1: fromelf --bin -o build\Nucleo_blink_led_NUCLEO_F401RE.bin build\Nucleo_blink_led.axf
 ".\build\Nucleo_blink_led.axf" - 0 Error(s), 9 Warning(s).
 
@@ -75,7 +76,7 @@ Package Vendor: Keil
   C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:24
+Build Time Elapsed:  00:00:19
 </pre>
 </body>
 </html>
