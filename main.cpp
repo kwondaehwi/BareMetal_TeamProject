@@ -94,31 +94,41 @@ int main(){
 						break;
 					}
 					else if(x<5&&y<5){
+
 						//temp up
+						
 						if(desired_temp>=32){
 							WARNING_MAX();
 						}else{
 							desired_temp+=0.5;
 						}
+						automatic=false;
+						center_led=0;
 						break;
 					}
 					else if(x>700&&y<5){
 						//temp down
-						if(desired_temp<=16.06){
-							WARNING_MIN();
-						}else{
-							desired_temp-=0.5;
-						}
-						break;
-					}
-					else if(x<5&&y>700){
-						//wind power up
 						if(wind_power==5){
 						
 						}else{
 							wind_power+=1;
 						}
+						automatic=false;
+						center_led=0;
 						break;
+						
+					}
+					else if(x<5&&y>700){
+						//wind power up
+						if(desired_temp<=16.06){
+							WARNING_MIN();
+						}else{
+							desired_temp-=0.5;
+						}
+						automatic=false;
+						center_led=0;
+						break;
+						
 					}
 					else if(x>750&&y>750){
 						//wind power down
@@ -128,37 +138,10 @@ int main(){
 						}else{
 							wind_power-=1;
 						}
+						automatic=false;
+						center_led=0;
 						break;
-					}
-					/*
-					if(x<100){ // left side
-						pc.printf("X=%d, Y=%d \r\n", x, y);
-						desired_temp = float(float(y+1)/15 + 16); // 16.06 to 32.20
-						pc.printf("desired temp = %0.2f\r\n", desired_temp);
-						//display();
-						wait(0.1);
-						break;
-					}
-					else if(x>140){ // right side
-						pc.printf("X=%d, Y=%d \r\n", x, y);
-						wind_power = int((y+1)/50)+1; // 1 to 5
-						if(wind_power>=5){
-							WARNING_MAX();
-							wind_power=5;
-						}
-						if(wind_power<=0){
-							WARNING_MIN();
-							wind_power=2;
-						}
-						pc.printf("wind power = %d\r\n", wind_power);
-						//display();
-						wait(0.1);
-						break;
-					}
-					if(y>765){
-						
-					}	
-						*/					
+					}		
 				}
 			 // click SW2 : left button = cooler / heater
 			 if(!left_button){
@@ -190,6 +173,48 @@ int main(){
 						 automatic=true;
 						 center_led=1;
 					}
+			}
+			pc.printf("current_temp:%f desired_temp:%f wind_power:%d mode:%d\r\n",current_temp,desired_temp,wind_power,mode);
+			
+			if(automatic){
+			// AUTO MODE
+			pc.printf("AUTO MODE\r\n");
+				if(mode==COOLER){
+					pc.printf("COOLER MODE\r\n");
+					if(current_temp-desired_temp>0){
+						if(wind_power<5){
+							wind_power++;
+							WIND_ON(wind_power);
+						}
+						else{
+							wind_power=5;
+							WIND_ON(wind_power);
+						}
+					} else {
+						wind_power=1;
+						WIND_ON(wind_power);
+					}
+				}
+				else{
+					pc.printf("HEATER MODE\r\n");
+					if(desired_temp-current_temp>0){
+						if(wind_power<5){
+							wind_power++;
+							WIND_ON(wind_power);
+						}
+						else{
+							wind_power=5;
+							WIND_ON(wind_power);
+						}
+					} else {
+						wind_power=1;
+						WIND_ON(wind_power);
+					}
+				}
+			}else{
+			//MANUAL MODE
+				pc.printf("MANUAL MODE\r\n");
+				WIND_ON(wind_power);
 			}
 
 		//click SW 10 : right button = power on/off
