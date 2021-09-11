@@ -4,8 +4,6 @@
 #include "motordriver.h"
 #include "DHT22.h"
 
-Motor mt(D11,PC_8);
-
 #define COOLER 1
 #define HEAT 2
 #define MAX_RANGE 0.00125
@@ -74,33 +72,30 @@ int main(){
    while(1)
    {
 		 	if(!right_button){
-				sys_on=!sys_on;							
-				right_led=1;
-				center_led=1;
-				left_led=1;
-				Red=0;
-				Blue=1;
-				Green=0;
-				WIND_ON(wind_power);
+				SYSTEM_ON();
+				
 			}
       while(sys_on){
         ultrasonic();
-				WIND_ON(wind_power);
-				BUZZWER_WARNING();
+				
          // click SW2 : left button = cooler / heater
          if(!left_button){
             if(mode==COOLER){
-               Red=1;
-               Blue=0;
-               Green=0;
-               mt.backward(wind_power);
+							mode=HEAT;
+							left_led=0;
+							Red=1;
+							Blue=0;
+							Green=0;
             }
             else{
-               Red=0;
-               Blue=1;
-               Green=0;
-               mt.forward(wind_power);
+							mode=COOLER;
+							left_led=1;
+							Red=0;
+							Blue=1;
+							Green=0;
             }
+						wait(0.1);
+						WIND_ON(wind_power);
          }
 			//click SW9 : center button = auto / manual
 				if(!center_button){
@@ -117,23 +112,9 @@ int main(){
 
 			//click SW 10 : right button = power on/off
 				if(!right_button){
-            sys_on=!sys_on;
-            if(!sys_on){
-               right_led=0;
-               center_led=0;
-               left_led=0;
-               Red=0;
-               Blue=0;
-               Green=1;
-               break;
-            }else{
-               right_led=1;
-               center_led=1;
-               left_led=1;
-               Red=0;
-               Blue=1;
-               Green=0;
-               mt.forward(wind_power);
+            if(sys_on){
+               SYSTEM_OFF();
+								break;
             }
 				}
 				wait(0.1);
@@ -154,7 +135,7 @@ void config(){
 void timeout_SYSTEM_OFF(){
     pc.printf("Human not detected!! System off\r\n");
     SYSTEM_OFF();
-      ultrasonic_timeout_flag = false;
+		ultrasonic_timeout_flag = false;
 }
 
 void ultrasonic(){
@@ -230,14 +211,26 @@ void SYSTEM_OFF(){
 	sys_on = !sys_on;
 	sound.period(1.0);
 	sound=0.5;
-	mode=HEAT;
-	automatic=false;
+	right_led=0;
+	center_led=0;
+	left_led=0;
+	Red=0;
+	Blue=0;
+	Green=1;
+	WIND_OFF();
 }
 
 void SYSTEM_ON(){
 	sys_on = !sys_on;
 	mode=COOLER;
 	automatic=true;
+	right_led=1;
+	center_led=1;
+	left_led=1;
+	Red=0;
+	Blue=1;
+	Green=0;
+	WIND_ON(wind_power);
 }
 
 void WIND_ON(int wind_power){
@@ -275,4 +268,5 @@ void check_temp_and_humid(){
 		h=sensor.getHumidity()/10;
 		current_temp=c;
 		humid=h;
+		pc.printf("check temp and humid : %.1f %.1f",current_temp,humid);
 }
