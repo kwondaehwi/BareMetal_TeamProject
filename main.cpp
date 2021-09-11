@@ -9,6 +9,10 @@
 #define MAX_RANGE 0.00125
 #define MIN_RANGE 0.00333
 
+//joystick
+AnalogIn x_axis (PC_2);
+AnalogIn y_axis (PC_3);
+
 Motor mt(D11,PC_8); // Motor
 PwmOut sound(PC_9); //Buzzer
 DHT22 sensor (PB_2); //Temp & Humid
@@ -27,6 +31,7 @@ DigitalOut Red(A1); //RGB Red
 DigitalOut Green(PC_6); //RGB Green
 DigitalOut Blue(A3); //RGB Blue
 
+void joystick_handler();
 void config();
 void ultrasonic();
 void display();
@@ -55,6 +60,7 @@ DigitalOut trig_pin(D10);
 DigitalIn echo_pin(D7);
 HCSR04 hcsr(D10, D7); 
 
+Ticker joystick;
 Ticker display_ticker;
 Timeout myTimeout;
 
@@ -65,21 +71,36 @@ float current_temp, desired_temp=18.0; //default = 18.0;
 float humid;
 int wind_power=2; // 1~5
 bool automatic=true;
+int x, y, debug_print; 
 
 int main(){
    config();
 
    while(1)
    {
+			if(debug_print){
+pc.printf("\rX=%3d, Y=%3d \n", x, y);
+debug_print = 0;
+}
+
+		 
 		 	if(!right_button){
+				wait(0.3);
 				SYSTEM_ON();
 				
 			}
       while(sys_on){
         ultrasonic();
 				
+				if(debug_print){
+pc.printf("\rX=%3d, Y=%3d \n", x, y);
+debug_print = 0;
+}
+
+				
          // click SW2 : left button = cooler / heater
          if(!left_button){
+					 wait(0.3);
             if(mode==COOLER){
 							mode=HEAT;
 							left_led=0;
@@ -99,6 +120,7 @@ int main(){
          }
 			//click SW9 : center button = auto / manual
 				if(!center_button){
+					wait(0.3);
             if(automatic)
             {
                automatic=false;
@@ -112,14 +134,30 @@ int main(){
 
 			//click SW 10 : right button = power on/off
 				if(!right_button){
+					wait(0.3);
             if(sys_on){
                SYSTEM_OFF();
 								break;
             }
 				}
+			
+				if(x>=700 && y< 5){
+					wait(0.5);
+					automatic=false;
+					center_led = 0;
+					wind_power++;
+					pc.printf("windpower up\r\n");
+				}
+				else if((x>=754 && x <= 755) && (y>=754 && y<=755)){
+					wait(0.5);
+					automatic=false;
+					center_led = 0;
+					wind_power--;
+					pc.printf("windpower down\r\n");
+				}
 				wait(0.1);
       }
-		wait(0.1);
+		wait(0.3);
   }
 }
 
@@ -172,6 +210,7 @@ void ultrasonic(){
 void display(){
    myGUI.clearDisplay();
    myGUI.setTextCursor(0,0);
+	joystick_handler();
 	wait(0.1);
    //system on/off
 
@@ -270,4 +309,10 @@ void check_temp_and_humid(){
 		current_temp=c;
 		humid=h;
 		pc.printf("check temp and humid : %.1f %.1f",current_temp,humid);
+}
+
+void joystick_handler(){
+	x = x_axis.read() * 1000;
+	y = y_axis.read() * 1000;
+	debug_print = 1;
 }
