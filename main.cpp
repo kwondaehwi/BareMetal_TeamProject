@@ -227,77 +227,6 @@ void GPIO_Config(){
    
 }
 
-void TIM_Config()
-{
-   //RGB Red: PA1(AF02:TIM5_CH2), Blue: PB0(AF02: TIM3_CH3), Green: PC6(AF02: TIM3_CH1)
-  RCC->APB1ENR   |=   (1<<1);         //   TIM3 clock enable
-  RCC->APB1ENR  |=  (1<<3);         //  TIM5 clock enable
-   
-  TIM3->PSC   |=   84-1;               //   Prescaler value
-  TIM5->PSC   |=  84-1;
-   
-  TIM3->ARR   = 1000;               //   Auto reload value
-  TIM5->ARR   = 1000;   
-   
-   // Green: TIM3_CH1
-  TIM3->CCMR1   |=   (3<<5);      //  PWM mode 1 - In upcounting, channel 1 is active as long as TIMx_CNT<TIMx_CCR1 else inactive.
-  TIM3->CCMR1   |=   (1<<3);      //  Preload register on TIMx_CCR1 enabled. Read/Write operations access the preload register. TIMx_CCR1 preload value is loaded in the active register at each update event.
-
-   // Blue: TIM3_CH3
-  TIM3->CCMR2   |=   (3<<5);
-  TIM3->CCMR2   |=   (1<<3);
-  
-   // Red: TIM5_CH2
-  TIM5->CCMR1   |=   (3<<13);
-  TIM5->CCMR1   |=   (1<<11);
-   
-   //TIM3
-  TIM3->CR1   |=   (1<<7);         //   TIMx_ARR register is buffered
-  //TIM5
-   TIM5->CR1   |=   (1<<7);
-  
-   //TIM3   
-  TIM3->EGR   |=   (1<<0);         //    Re-initialize the counter and generates an update of the registers.
-  //TIM5
-   TIM5->EGR   |=   (1<<0);
-   
-   // Green: TIM3_CH1
-  TIM3->CCER   &=   ~(1<<1);   //   OC1 active high
-  TIM3->CCER   &=   ~(1<<3);   //   CC1NP must be kept cleared in this case.
-  TIM3->CCER   |=   (1<<0);      //   On - OC1 signal is output on the corresponding output pin
-  
-   // Blue: TIM3_CH3
-  TIM3->CCER   &=   ~(1<<11);
-  TIM3->CCER   &=   ~(1<<9);
-  TIM3->CCER   |=   (1<<8);
-   
-   // Red: TIM5_CH2
-  TIM5->CCER   &=   ~(1<<5);
-  TIM5->CCER   &=   ~(1<<7);
-  TIM5->CCER   |=   (1<<4);
-   
-   // Green: TIM3_CH1
-  TIM3->DIER   |=   (1<<1);      //   capture/compare 1 interrupt enable
-  // Blue: TIM3_CH3
-   TIM3->DIER   |=   (1<<3);
-  // Red: TIM5_CH2
-   TIM5->DIER   |=   (1<<2);
-   
-  TIM3->SR   &=   ~(1<<1);      //   Capture interrupt flag clear
-  TIM5->SR   &=   ~(1<<1);
-   
-   // Green: TIM3_CH1
-  TIM3->CCR1   |=   500 ;         //   Duty cycle control value 
-  // Blue: TIM3_CH3
-   TIM3->CCR3   |=   500 ;
-  // Red: TIM5_CH2
-   TIM5->CCR2   |=   500 ;
-   
-  TIM3->CR1   |=   (1U<<0);      //   Run timer3
-  TIM5->CR1   |=   (1U<<0);  
-}
-
-
 
 void left_led_on(){
    GPIOA->ODR |= (1<<13);         
@@ -306,14 +235,15 @@ void left_led_off(){
    GPIOA->ODR &= ~(1<<13);
 }
 void toggle_mode(){
-	GPIOA->ODR ^= (1<<13); //xor operator
 	
-	if(GPIOA->ODR == 0){
+	
+	if(GPIOA->ODR &(1<<13) == 0){
 		pc.printf("Heater on\r\n");
+      GPIOA->ODR |= (1<<13); 
 		mode= HEAT;
-	}else if(GPIOA->ODR==1){
-		
+	}else if(GPIOA->ODR & (1<<13)==1){
 		pc.printf("Cooler on\r\n");
+      GPIOA->ODR &= ~(1<<13);
 		mode = COOLER;
 	}	
 }
@@ -325,7 +255,8 @@ void center_led_off(){
    GPIOB->ODR &= ~(1<<10);
 }
 void toggle_center_led(){
-	GPIOB->ODR ^= (1<<10);
+   if(GPIOB->ODR &(1<<10)==0) GPIOB->ODR |= (1<<10);
+	else GPIOB->ODR &= ~(1<<10);
 }
 void right_led_on(){
    GPIOA->ODR |= (1<<4);         
@@ -334,7 +265,8 @@ void right_led_off(){
    GPIOA->ODR &= ~(1<<4);
 }
 void toggle_right_led(){
-	GPIOA->ODR ^= (1<<4); 
+   if(GPIOA->ODR &(1<<4)==0) GPIOA->ODR |= (1<<4);
+	else GPIOA->ODR &= ~(1<<4);
 }
 
 void display(){
