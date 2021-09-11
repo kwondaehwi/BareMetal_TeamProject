@@ -3,6 +3,11 @@
 #include "Adafruit_SSD1306.h"
 #include "motordriver.h"
 #include "DHT22.h"
+<<<<<<< HEAD
+=======
+
+Motor mt(D11,PC_8);
+>>>>>>> 08a5ad52ad08c51016c071d2e01301a004bce38f
 
 #define COOLER 1
 #define HEAT 2
@@ -45,6 +50,12 @@ class I2CPreInit : public I2C{
       start();
    };
 };
+<<<<<<< HEAD
+=======
+
+I2C myI2C(I2C_SDA,I2C_SCL);
+Adafruit_SSD1306_I2c myGUI(myI2C, D13, 0x78, 64, 128);
+>>>>>>> 08a5ad52ad08c51016c071d2e01301a004bce38f
 
 Serial pc(USBTX,USBRX);
 //display
