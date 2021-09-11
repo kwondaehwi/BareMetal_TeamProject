@@ -185,32 +185,38 @@ int main(){
 			pc.printf("AUTO MODE\r\n");
 				if(mode==COOLER){
 					pc.printf("COOLER MODE\r\n");
-					if(current_temp-desired_temp>0){
-						if(wind_power<5){
-							wind_power++;
-							WIND_ON(wind_power);
-						}
-						else{
-							wind_power=5;
-							WIND_ON(wind_power);
-						}
-					} else {
+					if(current_temp-desired_temp>=10){
+						wind_power = 5;
+						WIND_ON(wind_power);
+					} else if(current_temp-desired_temp>=6){
+						wind_power = 4;
+						WIND_ON(wind_power);
+					}else if(current_temp-desired_temp>=3){
+						wind_power = 3;
+						WIND_ON(wind_power);
+					}else if(current_temp-desired_temp>=1){
+						wind_power = 2;
+						WIND_ON(wind_power);
+					}else {
 						wind_power=1;
 						WIND_ON(wind_power);
 					}
 				}
 				else{
 					pc.printf("HEATER MODE\r\n");
-					if(desired_temp-current_temp>0){
-						if(wind_power<5){
-							wind_power++;
-							WIND_ON(wind_power);
-						}
-						else{
-							wind_power=5;
-							WIND_ON(wind_power);
-						}
-					} else {
+					if(desired_temp-current_temp>=10){
+						wind_power = 5;
+						WIND_ON(wind_power);
+					} else if(desired_temp-current_temp>=6){
+						wind_power = 4;
+						WIND_ON(wind_power);
+					}else if(desired_temp-current_temp>=3){
+						wind_power = 3;
+						WIND_ON(wind_power);
+					}else if(desired_temp-current_temp>=1){
+						wind_power = 2;
+						WIND_ON(wind_power);
+					}else {
 						wind_power=1;
 						WIND_ON(wind_power);
 					}
