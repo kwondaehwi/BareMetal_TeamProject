@@ -94,7 +94,7 @@ int main(){
 							Blue=1;
 							Green=0;
             }
-						wait(0.1);
+						wait(0.01);
 						WIND_ON(wind_power);
          }
 			//click SW9 : center button = auto / manual
@@ -119,12 +119,13 @@ int main(){
 				}
 				wait(0.1);
       }
-		wait(0.5);
+		wait(0.1);
   }
 }
 
 void config(){
 	pc.baud(9600);
+	SYSTEM_OFF();
 	myGUI.clearDisplay();
 	echo_pin.mode(PullDown); //ultrasonic
 	display_ticker.attach(&display,1.0);	
@@ -208,7 +209,7 @@ void display(){
 }
 
 void SYSTEM_OFF(){
-	sys_on = !sys_on;
+	sys_on = false;
 	sound.period(1.0);
 	sound=0.5;
 	right_led=0;
@@ -221,7 +222,7 @@ void SYSTEM_OFF(){
 }
 
 void SYSTEM_ON(){
-	sys_on = !sys_on;
+	sys_on = true;
 	mode=COOLER;
 	automatic=true;
 	right_led=1;
