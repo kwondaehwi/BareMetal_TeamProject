@@ -2,6 +2,7 @@
 #include "hcsr04.h"
 #include "Adafruit_SSD1306.h"
 #include "motordriver.h"
+#include "DHT22.h"
 
 Motor mt(D11,PC_8);
 
@@ -29,6 +30,7 @@ class I2CPreInit : public I2C{
       start();
    };
 };
+
 I2C myI2C(I2C_SDA,I2C_SCL);
 Adafruit_SSD1306_I2c myGUI(myI2C, D13, 0x78, 64, 128);
 
@@ -38,7 +40,7 @@ DigitalOut trig_pin(D10);
 DigitalIn echo_pin(D7);
 
 HCSR04 hcsr(D10, D7);
-
+DHT22 DHT(PB_2);
 Timeout myTimeout;
 
 bool sys_on=false;
@@ -48,45 +50,10 @@ int wind_power=0.5; // 0.0~1.0
 bool automatic=true;
 bool ultrasonic_timeout_flag = false;
 
-void display(){
-   myGUI.clearDisplay();
-   myGUI.setTextCursor(0,0);
-	wait(0.1);
-   //system on/off
+void timeout_SYSTEM_OFF();
+void ultrasonic();
+void display();
 
-   if(sys_on){
-      myGUI.printf ("HVAC power is on\r\n");
-		 //conditioner mode COOLER/HEATER
-			if(mode == COOLER){
-				myGUI.printf ("MODE : Cooler\r\n");
-			}
-			else{
-				myGUI.printf ("MODE : Heater\r\n");
-			}      
-
-			//Temperature Cur/Desired
-			myGUI.printf ("Current Temp : %.1f\r\nDesired Temp : %.1f\r\n", current_temp, desired_temp);
-
-			//Wind power
-			myGUI.printf("Wind : ");
-			for(int i=0;i<wind_power;i++){
-				myGUI.printf (">");
-			}
-
-			// Air vent
-			myGUI.printf ("\r\n");
-   
-   }
-   else{
-      myGUI.printf ("HVAC power is off\r\n");
-   }
-   
-   
-   wait(0.1);
-   
-   //myGUI.printf ("%ux%u OLED Display\r\n",myGUI.width(), myGUI.height());
-   myGUI.display();
-}
 int main(){
 	myGUI.clearDisplay();
    pc.baud(9600);
@@ -94,8 +61,7 @@ int main(){
 	
    while(1)
    {
-
-
+      display();
       while(sys_on){
          // click SW2 : left button = cooler / heater
          if(!SW10){
@@ -127,6 +93,16 @@ int main(){
             }
 			}
          if(automatic){
+            DHT.sample();
+            float c=DHT.getTemperature();
+            float h=DHT.getHumidity();
+            int temp = (int)c;
+            int humid = (int)h;
+            pc.printf("Temp: %d, Humid: %d\r\n", temp, humid);
+            //AUTO Set 18.0
+            if(temp-18.0>0){
+               wind_power=(temp-18.0)
+            }
 
          }
          else{
@@ -154,7 +130,7 @@ int main(){
             }
 
 			}
-
+         display();
       }
 		   
 			wait(0.5);
@@ -197,6 +173,45 @@ void timeout_SYSTEM_OFF(){
       ultrasonic_timeout_flag = false;
 }
 
+void display(){
+   myGUI.clearDisplay();
+   myGUI.setTextCursor(0,0);
+	wait(0.1);
+   //system on/off
+   ultrasonic();
+   if(sys_on){
+      myGUI.printf ("HVAC power is on\r\n");
+		 //conditioner mode COOLER/HEATER
+			if(mode == COOLER){
+				myGUI.printf ("MODE : Cooler\r\n");
+			}
+			else{
+				myGUI.printf ("MODE : Heater\r\n");
+			}      
+
+			//Temperature Cur/Desired
+			myGUI.printf ("Current Temp : %.1f\r\nDesired Temp : %.1f\r\n", current_temp, desired_temp);
+
+			//Wind power
+			myGUI.printf("Wind : ");
+			for(int i=0;i<wind_power;i++){
+				myGUI.printf (">");
+			}
+
+			// Air vent
+			myGUI.printf ("\r\n");
+   
+   }
+   else{
+      myGUI.printf ("HVAC power is off\r\n");
+   }
+   
+   
+   wait(0.1);
+   
+   //myGUI.printf ("%ux%u OLED Display\r\n",myGUI.width(), myGUI.height());
+   myGUI.display();
+}
 
 
    
