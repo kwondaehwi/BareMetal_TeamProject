@@ -42,11 +42,21 @@ C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
 .\lib\hcsr04.h(71): warning:  #1-D: last line of file ends without a newline
   #endif
-main.cpp: 2 warnings, 0 errors
+main.cpp(101): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  							desired_temp+=0.5;
+main.cpp(107): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  						if(desired_temp<=16.06){
+main.cpp(110): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  							desired_temp-=0.5;
+main.cpp: 5 warnings, 0 errors
 compiling DHT22.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
 lib\DHT22.cpp: 1 warning, 0 errors
+compiling motordriver.cpp...
+C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+lib\motordriver.cpp: 1 warning, 0 errors
 compiling hcsr04.cpp...
 C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
@@ -55,14 +65,10 @@ lib\hcsr04.h(71): warning:  #1-D: last line of file ends without a newline
 lib\hcsr04.cpp(98): warning:  #1-D: last line of file ends without a newline
   */
 lib\hcsr04.cpp: 3 warnings, 0 errors
-compiling motordriver.cpp...
-C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h(52): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
-  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-lib\motordriver.cpp: 1 warning, 0 errors
 linking...
-Program Size: Code=37112 RO-data=5524 RW-data=1576 ZI-data=3252  
+Program Size: Code=37220 RO-data=5524 RW-data=1576 ZI-data=3252  
 After Build - User command #1: fromelf --bin -o build\Nucleo_blink_led_NUCLEO_F401RE.bin build\Nucleo_blink_led.axf
-".\build\Nucleo_blink_led.axf" - 0 Error(s), 9 Warning(s).
+".\build\Nucleo_blink_led.axf" - 0 Error(s), 12 Warning(s).
 
 <h2>Software Packages used:</h2>
 

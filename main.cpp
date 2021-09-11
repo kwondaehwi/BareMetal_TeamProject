@@ -90,6 +90,47 @@ int main(){
 					x = x_axis.read() * 1000;
 					y = y_axis.read() * 1000;
 					//debug_print = 1;
+					if(y>765){
+						break;
+					}
+					else if(x<5&&y<5){
+						//temp up
+						if(desired_temp>=32){
+							WARNING_MAX();
+						}else{
+							desired_temp+=0.5;
+						}
+						break;
+					}
+					else if(x>700&&y<5){
+						//temp down
+						if(desired_temp<=16.06){
+							WARNING_MIN();
+						}else{
+							desired_temp-=0.5;
+						}
+						break;
+					}
+					else if(x<5&&y>700){
+						//wind power up
+						if(wind_power==5){
+						
+						}else{
+							wind_power+=1;
+						}
+						break;
+					}
+					else if(x>750&&y>750){
+						//wind power down
+						
+						if(wind_power==1){
+							WARNING_MIN();
+						}else{
+							wind_power-=1;
+						}
+						break;
+					}
+					/*
 					if(x<100){ // left side
 						pc.printf("X=%d, Y=%d \r\n", x, y);
 						desired_temp = float(float(y+1)/15 + 16); // 16.06 to 32.20
@@ -114,9 +155,10 @@ int main(){
 						wait(0.1);
 						break;
 					}
-					if(x>115&&x<125&&y<125&&y>115){
-						break;
-					}					
+					if(y>765){
+						
+					}	
+						*/					
 				}
 			 // click SW2 : left button = cooler / heater
 			 if(!left_button){
