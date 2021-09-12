@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\build\Nucleo_blink_led.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\build\Nucleo_blink_led.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Sep 11 20:50:56 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Sep 12 00:17:59 2021
 <BR><P>
 <H3>Maximum Stack Usage =       1088 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -361,7 +361,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;$Super$$main
 </UL>
 
-<P><STRONG><a name="[d0]"></a>SYSTEM_ON()</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[d0]"></a>SYSTEM_ON()</STRONG> (Thumb, 78 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 248<LI>Call Chain = SYSTEM_ON() &rArr; WIND_ON(int) &rArr; Motor::backward(float) &rArr; mbed::PwmOut::operator =(float) &rArr; pwmout_write &rArr; error &rArr; exit &rArr; mbed_die &rArr; gpio_init_out &rArr; gpio_init &rArr; pin_function &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mbed::DigitalOut::operator =(int)
@@ -380,7 +380,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;display()
 </UL>
 
-<P><STRONG><a name="[d5]"></a>display()</STRONG> (Thumb, 198 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[d5]"></a>display()</STRONG> (Thumb, 230 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = display() &rArr; check_temp_and_humid() &rArr; DHT22::sample() &rArr; gpio_init_in &rArr; gpio_init &rArr; pin_function &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
@@ -404,7 +404,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;$Super$$main
 </UL>
 
-<P><STRONG><a name="[dc]"></a>$Super$$main</STRONG> (Thumb, 1264 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[dc]"></a>$Super$$main</STRONG> (Thumb, 1746 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = $Super$$main &rArr; config() &rArr; SYSTEM_OFF() &rArr; mbed::PwmOut::period(float) &rArr; pwmout_period &rArr; pwmout_period_us &rArr; pwmout_write &rArr; error &rArr; exit &rArr; mbed_die &rArr; gpio_init_out &rArr; gpio_init &rArr; pin_function &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mbed::DigitalIn::operator int()
@@ -429,7 +429,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[e3]"></a>joystick_handler()</STRONG> (Thumb, 528 bytes, Stack size 16 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[e3]"></a>joystick_handler()</STRONG> (Thumb, 250 bytes, Stack size 16 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mbed::AnalogIn::read()
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wait
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
@@ -3988,7 +3988,7 @@ Global Symbols
 <H3>
 Local Symbols
 </H3>
-<P><STRONG><a name="[b0]"></a>__sti___8_main_cpp_mt</STRONG> (Thumb, 316 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[b0]"></a>__sti___8_main_cpp_mt</STRONG> (Thumb, 318 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 1088<LI>Call Chain = __sti___8_main_cpp_mt &rArr; Adafruit_SSD1306::splash() &rArr; __aeabi_memcpy4
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mbed::DigitalIn::DigitalIn(PinName)

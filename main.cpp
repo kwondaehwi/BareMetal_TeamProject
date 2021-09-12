@@ -75,6 +75,7 @@ float current_temp, desired_temp=18.0; //default = 18.0;
 float humid;
 int wind_power=2; // 1~5
 bool automatic=true;
+bool vent;
 
 int main(){
    config();
@@ -168,10 +169,12 @@ int main(){
 					if(automatic)
 					{
 						 automatic=false;
+						 vent = false;
 						 center_led=0;
 					}
 					else{
 						 automatic=true;
+						 vent = true;
 						 center_led=1;
 					}
 			}
@@ -182,32 +185,38 @@ int main(){
 			pc.printf("AUTO MODE\r\n");
 				if(mode==COOLER){
 					pc.printf("COOLER MODE\r\n");
-					if(current_temp-desired_temp>0){
-						if(wind_power<5){
-							wind_power++;
-							WIND_ON(wind_power);
-						}
-						else{
-							wind_power=5;
-							WIND_ON(wind_power);
-						}
-					} else {
+					if(current_temp-desired_temp>=10){
+						wind_power = 5;
+						WIND_ON(wind_power);
+					} else if(current_temp-desired_temp>=6){
+						wind_power = 4;
+						WIND_ON(wind_power);
+					}else if(current_temp-desired_temp>=3){
+						wind_power = 3;
+						WIND_ON(wind_power);
+					}else if(current_temp-desired_temp>=1){
+						wind_power = 2;
+						WIND_ON(wind_power);
+					}else {
 						wind_power=1;
 						WIND_ON(wind_power);
 					}
 				}
 				else{
 					pc.printf("HEATER MODE\r\n");
-					if(desired_temp-current_temp>0){
-						if(wind_power<5){
-							wind_power++;
-							WIND_ON(wind_power);
-						}
-						else{
-							wind_power=5;
-							WIND_ON(wind_power);
-						}
-					} else {
+					if(desired_temp-current_temp>=10){
+						wind_power = 5;
+						WIND_ON(wind_power);
+					} else if(desired_temp-current_temp>=6){
+						wind_power = 4;
+						WIND_ON(wind_power);
+					}else if(desired_temp-current_temp>=3){
+						wind_power = 3;
+						WIND_ON(wind_power);
+					}else if(desired_temp-current_temp>=1){
+						wind_power = 2;
+						WIND_ON(wind_power);
+					}else {
 						wind_power=1;
 						WIND_ON(wind_power);
 					}
@@ -330,7 +339,15 @@ void display(){
 		for(int i=0;i<wind_power;i++){
 			myGUI.printf (">");
 		}
+		myGUI.printf ("\r\n");
 		// Air vent
+		if(vent){
+			myGUI.printf ("vent open\r\n");
+
+		}else{
+			myGUI.printf ("vent closed\r\n");
+
+		}
 		myGUI.printf ("\r\n");
 
 	}
@@ -356,6 +373,7 @@ void SYSTEM_OFF(){
 }
 
 void SYSTEM_ON(){
+	vent = true;
 	sys_on = true;
 	mode=COOLER;
 	automatic=true;
